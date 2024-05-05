@@ -1,0 +1,27 @@
+fuge_global:
+  tail: true
+  monitor_excludes:
+    - '**/node_modules/**'
+    - '**/.git/**'
+    - '**/*.log'
+    - '**/data/**'
+context:
+  type: process
+  path: ../../context
+  run: java -cp .:sse:binaries/* Reason
+back:
+  type: node
+  path: ../../back/srv
+  run: node back-dev-mesh.js --seneca.options.legacy.transport=false
+front:
+  type: node
+  path: ../../front/srv
+  run: node front-dev-mesh.js --seneca.options.legacy.transport=false
+reason:
+  type: node
+  path: ../../reason/srv
+  run: node reason-dev-mesh.js --seneca.options.legacy.transport=false
+store:
+  type: node
+  path: ../../store/srv
+  run: node store-dev-mesh.js --seneca.options.legacy.transport=false

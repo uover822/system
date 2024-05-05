@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: descriptor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: descriptor
+  template:
+    metadata:
+      labels:
+        app: descriptor
+    spec:
+      containers:
+        - name: descriptor
+          image: uover822/msr-descriptor:1
+          ports:
+            - containerPort: 8015
+          env:
+            - name: cluster
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: cluster
+            - name: app
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: app
+            - name: user
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: user

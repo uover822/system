@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: descriptor
+spec:
+  selector:
+    app: descriptor
+  ports:
+    - port: 8015
+  type: LoadBalancer
+  sessionAffinity: ClientIP

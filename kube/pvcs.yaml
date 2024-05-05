@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: msr-claim
+spec:
+  volumeName: msr-volume
+  accessModes:
+  - ReadWriteMany
+  storageClassName: msr-sc
+  resources:
+    requests:
+      storage: 3Gi

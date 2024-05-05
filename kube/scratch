@@ -1,0 +1,206 @@
+Hi Diane: are we still getting together for Christmas? If so, is if ok/ better if I come down Wednesday, Thursday?
+
+aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 863976773676.dkr.ecr.us-west-2.amazonaws.com/eks-demo
+
+docker tag webapp:latest 863976773676.dkr.ecr.us-west-2.amazonaws.com/eks-demo
+docker push 863976773676.dkr.ecr.us-west-2.amazonaws.com/eks-demo:latest
+
+doit.sh
+
+context/doit.sh 8 35 36
+ls binaries/[dk]*-8.36*
+ls -1 > ../l1
+ls -1 > ../../l2
+
+k delete --all deployments
+k delete --all services
+k delete --all statefulsets
+
+docker tag msr-associate:1 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-associate:1; docker tag msr-context:1 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-context:1; docker tag msr-descriptor:1 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-descriptor:1; docker tag msr-mediator:1 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-mediator:1; docker tag msr-properties:1 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-properties:1; docker tag msr-reason:1 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-reason:1; docker tag msr-relation:1 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-relation:1; docker tag msr-store:1 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-store:1; docker tag msr-web:1 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-web:1
+docker tag msr-associate:1 uover822/msr-associate:1; docker tag msr-context:1 uover822/msr-context:1; docker tag msr-descriptor:1 uover822/msr-descriptor:1; docker tag msr-mediator:1 uover822/msr-mediator:1; docker tag msr-properties:1 uover822/msr-properties:1; docker tag msr-reason:1 uover822/msr-reason:1;docker tag msr-relation:1 uover822/msr-relation:1; docker tag msr-store:1 uover822/msr-store:1; docker tag msr-web:1 uover822/msr-web:1
+docker system prune
+
+aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 863976773676.dkr.ecr.us-west-2.amazonaws.com
+docker login
+
+docker push 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-associate:1; docker push 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-context:1; docker push 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-descriptor:1; docker push 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-mediator:1; docker push 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-properties:1; docker push 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-reason:1; docker push 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-relation:1; docker push 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-store:1; docker push 863976773676.dkr.ecr.us-west-2.amazonaws.com/msr-web:1
+docker push uover822/msr-associate:1; docker push uover822/msr-context:1; docker push uover822/msr-descriptor:1; docker push uover822/msr-mediator:1; docker push uover822/msr-properties:1; docker push uover822/msr-reason:1; docker push uover822/msr-relation:1; docker push uover822/msr-store:1; docker push uover822/msr-web:1
+
+aws sts get-caller-identity
+e create cluster -f clusters.yaml
+# ~/.kuba.config:s/alpha/beta/
+aws eks update-kubeconfig --name MSR-Demo-Cluster
+minikube update-context
+k3d cluster create mycluster -p "8000:8000@loadbalancer" -p "4567:4567@loadbalancer" -p "8088:80@servers:*"
+kind create cluster
+k config current-context
+e create iamidentitymapping --cluster MSR-Demo-Cluster --arn arn:aws:iam::863976773676:user/greg --group system:masters --username greg
+e delete cluster --name=MSR-Demo-Cluster
+
+k get pv | grep Released | awk '$1 {print$1}' | while read vol; do k delete pv/${vol}; done
+
+k apply -f scs.yaml -f pvs.yaml -f pvcs.yaml
+k apply -f cfg-msr.yaml
+for name in deploy-msr*.yaml; do k apply -f $name; done
+for name in svc-msr*.yaml; do k apply -f $name; done
+k apply -f ing-msrcontext.yaml -f ing-msrweb.yaml -f ing-msrproms.yaml
+
+for name in `k get pods -o name`; do echo $name; echo ''; k logs $name | egrep -i rror\|warn\|meou\|excep; echo ''; done
+
+k get pods -l app=msr -o go-template='{{range .items}}{{.status.podIP}}{{"\n"}}{{end}}'
+
+k exec -it pod/store-7c6f5f74f4-jwnxj -- bash
+k cp /opt/msr/data store-7c6f5f74f4-rh2mp:/opt/
+docker system prune
+docker system prune -a
+
+https://www.berkeleyskiclub.org/Forms/2021to2022BudgetWorksheet.pdf
+
+<a href="https://www.berkeleyskiclub.org/Forms/2021to2022BudgetWorksheet.pdf">HTML link code generator</a>
+
+k run curl --image=radial/busyboxplus:curl -i --tty
+k attach curl -c curl -i -t
+
+apt-get update
+apt-get install vim
+
+syntax off
+nohl
+
+863976773676/ expershare john/ greg Expershare!!
+
+https://towardsdatascience.com/kubernetes-application-deployment-with-aws-eks-and-ecr-4600e11b2d3c
+
+install minikube-darwin-amd64 /usr/local/bin/minikube
+
+k port-forward svc/context 4567:4567 &
+k port-forward svc/web 8000:8000 &
+k port-forward deploy/web 8000:8000 &
+k port-forward svc/latest-prometheus-server 8088:80 &
+k port-forward svc/latest-grafana 8080:80 &
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+
+helm repo list # -A -n <ns>
+helm list
+helm delete repo # -A -n <ns>
+
+#cd /opt/helm-charts/charts
+helm install -f /opt/helm-charts/charts/values.yaml latest-prometheus prometheus-community/prometheus
+helm uninstall latest-prometheus
+
+helm install latest-grafana grafana/grafana
+helm uninstall latest-grafana
+
+k get secret latest-grafana -o jsonpath="{.data.admin-user}" | base64 --decode ; echo
+k get secret latest-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+for name in associate descriptor mediator properties reason relation store system web; do pushd $name; ncu --upgrade; npm install; popd; done
+for name in store; do pushd $name; ncu --upgrade; npm install; popd; done
+
+./node_modules/.bin/fuge shell fuge/fuge.yml
+
+npm install pm2@latest -g
+pm2 update
+pm2 restart pm2/processes.json -i max
+pm2 stop all
+pm2 delete all
+
+console.dir('m.m.r-e:'+process.env.cluster)
+
+detailsdescribes
+
+/opt/perf
+
+time python prom_events_tsv.py http://localhost:8088
+time python prom_resources_tsv.py http://localhost:8088
+
+rm -rf msr-
+cp -r msr msr-
+find . -type d -name node_modules -depth 2 -exec rm -rf {} \;
+scp -rq msr- 192.168.1.8:/opt/msr
+cp -r msr- /Volumes/KINGSTON/msr
+
+find . -type d -name node_modules -depth 2 -exec rm -rf {} \;
+find . -type f -name \*.json -exec sed -i '' 's/pid":"mv6u7h/pid":"mbvx1u/' {} \;
+
+docker builder prune
+
+[context - 3177]: [qtp1268650975-31] INFO org.kie.api.internal.utils.ServiceDiscoveryImpl - Cannot load service: org.kie.internal.process.CorrelationKeyFactory
+[context - 3177]: [qtp1268650975-31] INFO org.kie.internal.pmml.PMMLImplementationsUtil - Using LEGACY implementation
+
+kill $(jobs -p)
+
+<k3d>
+k edit deployments.apps -n kube-system metrics-server
+
+<k3d>
+<after dnsPolicy: ClusterFirst>
+      hostNetwork: true
+<eks>
+sudo vi /etc/pcoip-agent/pcoip-agent.conf
+pcoip.server_clipboard_state = 1
+
+curl -LO https://dl.k8s.io/release/v1.25.0/bin/linux/amd64/kubectl
+
+v=spf1 include:gvam1203.siteground.biz include:_spf.google.com ~all # +all
+
+default._domainkey 14400 IN TXT "v=DKIM1;k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC55Z7WPFqB3B/e0swcTmtY1R2kRPonzmQFCwvRcOP/JzUAOpv692Wm0u0FlWbzU6/65p3lnw9NNRhnZmISsI+x/o/meJRhek3Q3EjdJtpzTRGIuwEkk/GpM+PVoYgzMGiqzvZ2mMjWTe305fLySdQHb8cAErXqxkAz/4oFhszQGwIDAQAB"
+
+sed -i '' s/remove_cv_t/remove_cv/ ~/Library/Caches/node-gyp/18.12.1/include/node/v8-internal.h
+
+#bsc / spf/ edit
+
+v=spf1 include:secureserver.net include:_spf.google.com ~all # +all
+
+#bsc / dkim, selector: gmail, key length: 2048, type: txt host: @, ttl: auto
+
+v=DKIM1;t=s;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyJEBOFxplKpAV/8dU4lltFM+/syQKXBaSpGtRxDLnKB/lgNvjlUhfD4qcGJGlCsQLzQx+HIfM0NbLXWZUEPUzV9cgEZbMNDQ093Vkk1Fpxr7ywFeaOW8yXZrdxbXssMVKKSrGXHq1kA7mqMoBdbEB5NoOxqR1zci+2SzIgFHGND9B9PG3LdqlsR/vztKgXtv2EXzQypDxg8ASup3sxURjAydaRRng8yND9T4vDFZGRanXT0Icx0XXy1FgDVzH8mpZtk5GmJvsv0IRr4cO46d0lNRgAZfil1z2Qa0Qy6gx+WtnpBv76oAeGdlfDgaTLd+DfRXnhkn8Mj7EDrtPDr4HQIDAQAB
+
+helm repo add crossplane-stable https://charts.crossplane.io/stable
+helm repo update
+
+helm upgrade --install crossplane --namespace crossplane-system --create-namespace crossplane-stable/crossplane --wait
+
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-kubernetes
+spec:
+  package: "crossplane/provider-kubernetes:main"
+
+k create -d provider.yaml
+
+SA=$(k -n crossplane-system get sa -o name | grep provider-kubernetes | sed -e 's|serviceaccount\/|crossplane-system:|g')
+k create clusterrolebinding provider-kubernetes-admin-binding --clusterrole cluster-admin --serviceaccount="${SA}"
+k apply -f /opt/crossplane/provider-kubernetes/examples/provider/config-in-cluster.yaml
+
+find . -type d -name node_modules -depth 2 -exec rm -rf {} \;
+scp -rq msr- 192.168.1.13:/opt/msr
+
+#k create secret docker-registry regcred --docker-server=https://index.docker.io/v1/ --docker-username=uover822 --docker-password=Iover822 --docker-email=jharrison@expershare.com --cluster=k3d-mycluster --context=k3d-mycluster --kubeconfig=$HOME/.kube/config
+k create secret docker-registry regcred --docker-username=uover822 --docker-password=Iover822 --docker-email=jharrison@expershare.com
+k get secret regcred --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode
+
+k apply -f p.yaml
+p.sh
+k apply -f definition.yaml -f frontend.yaml -f app-frontend.yaml
+
+curl -X GET -i http://localhost:8000/healthy
+
+http://latest-prometheus-server
+
+floor(perf_mediator_descriptor_rcv_ts)
+round(1/(perf_mediator_descriptor_rcv_ts - floor(perf_mediator_descriptor_rcv_ts)))
+floor(perf_mediator_descriptor_rcv_ts) + round(1/(perf_mediator_descriptor_rcv_ts - floor(perf_mediator_descriptor_rcv_ts)))
+
+values.yaml - vc 0.19.5 charts/k3s/values.yaml
+
+  persistentvolumes:
+    enabled: true
+  storageclasses:
+    enabled: true
+
+vc create my-vcluster -f /opt/vcluster/charts/k3s/values.yaml &

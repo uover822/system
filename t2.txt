@@ -1,0 +1,7 @@
+${pid}_[when]{this} precedes {that}=c+rndm+_describes.{this}() c+rndm+_precedes.{that}()
+
+[when]{this} before {that}=c+rndm+_describes.{that}() c+rndm+_describes.{this}(before == '{that}')
+
+[then]it's {adj}!;=insert(new javassist.ClassPool(true).makeClass('c+rndm+_describes.{adj}').toClass().getConstructor().newInstance()); sse.Push.main('+this.id+_describes|r|{adj}!|d');|dsl|dsl|n|
+
+if this precedes that then it\'s neat!|drl|drl|n|test2|p|that|a|before|n|this|d|that|d|precedes|sr\"}"

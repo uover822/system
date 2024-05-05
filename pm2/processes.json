@@ -1,0 +1,98 @@
+{
+  apps:[
+    {
+      name:'context',
+      cwd:'.',
+      script:'/usr/bin/java',
+      args:[
+        '--add-opens',
+        'java.base/java.lang=ALL-UNNAMED',
+        '-cp',
+        '/opt/msr/context:/opt/msr/context/sse:/opt/msr/context/binaries/*',
+        'Reason'
+      ],
+      node_args:[],
+      og_date_format:'YYYY-MM-DD HH:mm Z',
+      exec_interpreter:'',
+      exec_mode:'fork',
+      env: {  // common env variables
+        "INTERVAL" : 1000,
+        "cluster" : "pm2",
+        "app" : "test",
+        "user" : "john"
+      }
+    },
+    {
+      name: 'associate',
+      script: '/opt/msr/associate/srv/associate-dev.js',
+      args: '--seneca.options.legacy.transport=false',
+      exec_mode: "fork",
+      env: {  // common env variables
+        "INTERVAL" : 1000
+      }
+    },
+    {
+      name: 'descriptor',
+      script: '/opt/msr/descriptor/srv/descriptor-dev.js',
+      args: '--seneca.options.legacy.transport=false',
+      exec_mode: "fork",
+      env: {  // common env variables
+        "INTERVAL" : 1000
+      }
+    },
+    {
+      name: 'mediator',
+      script: '/opt/msr/mediator/srv/mediator-dev.js',
+      args: '--seneca.options.legacy.transport=false',
+      exec_mode: "fork",
+      env: {  // common env variables
+        "INTERVAL" : 1000
+      }
+    },
+    {
+      name: 'properties',
+      script: '/opt/msr/properties/srv/properties-dev.js',
+      args: '--seneca.options.legacy.transport=false',
+      exec_mode: "fork",
+      env: {  // common env variables
+        "INTERVAL" : 1000
+      }
+    },
+    {
+      name: 'reason',
+      script: '/opt/msr/reason/srv/reason-dev.js',
+      args: '--seneca.options.legacy.transport=false',
+      exec_mode: "fork",
+      env: {  // common env variables
+        "INTERVAL" : 1000
+      }
+    },
+    {
+      name: 'relation',
+      script: '/opt/msr/relation/srv/relation-dev.js',
+      args: '--seneca.options.legacy.transport=false',
+      exec_mode: "fork",
+      env: {  // common env variables
+        "INTERVAL" : 1000
+      }
+    },
+    {
+      name: 'store',
+      script: '/opt/msr/store/srv/store-dev.js',
+      args: '--seneca.options.legacy.transport=false',
+      exec_mode: "fork",
+      env: {  // common env variables
+        "INTERVAL" : 1000
+      }
+    },
+    {
+      name: 'web',
+      script: '/opt/msr/web/srv/web-dev.js',
+      args: '--seneca.options.legacy.transport=false',
+      exec_mode: "fork",
+      env: {  // common env variables
+        "INTERVAL" : 1000
+      }
+    },
+  ]
+}

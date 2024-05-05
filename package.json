@@ -1,0 +1,18 @@
+{
+  "name": "system",
+  "version": "1.0.0",
+  "description": "This is a repository in the microservice demonstration system for the [Tao of Microservices](//bit.ly/rmtaomicro) book (chapter 9). This code is live at [nodezoo.com](//nodezoo.com).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "John Harrison <jharrison@expershare.com> (http://www.expershare.com)",
+  "license": "ISC",
+  "dependencies": {
+    "fuge": "^2.0.2",
+    "seneca": "^3.36.0",
+    "seneca-entity": "^25.1.3",
+    "uuid": "^9.0.1"
+  }
+}

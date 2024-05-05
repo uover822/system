@@ -1,0 +1,244 @@
+version: "3.8"
+kind: Service
+metadata:
+  name: front
+spec:
+  ports:
+    - name: front
+      port: 8000
+      targetPort: 8000
+  selector:
+    srv: front
+  type: NodePort
+---
+
+kind: Service
+metadata:
+  name: mediator
+spec:
+  ports:
+    - name: mediator
+      port: 9025
+      targetPort: 9025
+  selector:
+    srv: mediator
+  type: NodePort
+---
+
+kind: Service
+metadata:
+  name: associate
+spec:
+  ports:
+    - name: associate
+      port: 9005
+      targetPort: 9005
+  selector:
+    srv: associate
+  type: NodePort
+---
+
+kind: Service
+metadata:
+  name: descriptor
+spec:
+  ports:
+    - name: descriptor
+      port: 9015
+      targetPort: 9015
+  selector:
+    srv: descriptor
+  type: NodePort
+---
+
+kind: Service
+metadata:
+  name: properties
+spec:
+  ports:
+    - name: properties
+      port: 9030
+      targetPort: 9030
+  selector:
+    srv: properties
+  type: NodePort
+---
+
+kind: Service
+metadata:
+  name: reason
+spec:
+  ports:
+    - name: reason
+      port: 9035
+      targetPort: 9035
+  selector:
+    srv: reason
+  type: NodePort
+---
+
+kind: Service
+metadata:
+  name: relation
+spec:
+  ports:
+    - name: relation
+      port: 9040
+      targetPort: 9040
+  selector:
+    srv: relation
+  type: NodePort
+---
+
+kind: Service
+metadata:
+  name: consul
+spec:
+  ports:
+    - name: consul
+      port: 8500
+      targetPort: 8500
+  selector:
+    srv: consul
+  type: NodePort
+---
+
+kind: Deployment
+metadata:
+  name: front
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        srv: front
+    spec:
+      containers:
+      - name: front
+        image: msr-front-prod:1
+        env:
+        - name: BASES
+          value: "172.17.0.6:39000"
+---
+
+kind: Deployment
+metadata:
+  name: mediator
+spec:
+  mediatoricas: 1
+  template:
+    metadata:
+      labels:
+        srv: mediator
+    spec:
+      containers:
+      - name: mediator
+        image: msr-mediator-prod:1
+        env:
+        - name: BASES
+          value: "172.17.0.6:39000"
+---
+
+kind: Deployment
+metadata:
+  name: associate
+spec:
+  associateicas: 1
+  template:
+    metadata:
+      labels:
+        srv: associate
+    spec:
+      containers:
+      - name: associate
+        image: msr-associate-prod:1
+        env:
+        - name: BASES
+          value: "172.17.0.6:39000"
+---
+
+kind: Deployment
+metadata:
+  name: descriptor
+spec:
+  descriptoricas: 1
+  template:
+    metadata:
+      labels:
+        srv: descriptor
+    spec:
+      containers:
+      - name: descriptor
+        image: msr-descriptor-prod:1
+        env:
+        - name: BASES
+          value: "172.17.0.6:39000"
+---
+
+kind: Deployment
+metadata:
+  name: properties
+spec:
+  propertiesicas: 1
+  template:
+    metadata:
+      labels:
+        srv: properties
+    spec:
+      containers:
+      - name: properties
+        image: msr-properties-prod:1
+        env:
+        - name: BASES
+          value: "172.17.0.6:39000"
+---
+
+kind: Deployment
+metadata:
+  name: reason
+spec:
+  reasonicas: 1
+  template:
+    metadata:
+      labels:
+        srv: reason
+    spec:
+      containers:
+      - name: reason
+        image: msr-reason-prod:1
+        env:
+        - name: BASES
+          value: "172.17.0.6:39000"
+---
+
+kind: Deployment
+metadata:
+  name: relation
+spec:
+  relationicas: 1
+  template:
+    metadata:
+      labels:
+        srv: relation
+    spec:
+      containers:
+      - name: relation
+        image: msr-relation-prod:1
+        env:
+        - name: BASES
+          value: "172.17.0.6:39000"
+---
+
+kind: Deployment
+metadata:
+  name: consul
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        srv: consul
+    spec:
+      containers:
+      - name: consul
+        image: consul

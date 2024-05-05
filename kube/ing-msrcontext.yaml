@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: msr-context-socket
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.org/proxy-connect-timeout: 3600s
+    nginx.org/proxy-read-timeout: 3600s
+    nginx.org/proxy-send-timeout: 3600s
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: context
+    - http:
+        paths:
+          - path: /push
+            pathType: Prefix
+            backend:
+              service:
+                name: context
+                port:
+                  number: 4567
+          - path: /iot
+            pathType: Prefix
+            backend:
+              service:
+                name: context
+                port:
+                  number: 4567

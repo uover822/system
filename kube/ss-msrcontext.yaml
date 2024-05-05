@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: context
+  name: context
+spec:
+  selector:
+    matchLabels:
+      app: context
+  serviceName: "context"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: context
+    spec:
+      containers:
+        - name: context
+          image: uover822/msr-context:latest
+          ports:
+            - containerPort: 4567
+              name: context
+            - containerPort: 7080
+              name: metrics

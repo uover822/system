@@ -1,0 +1,83 @@
+
+version: '3'
+
+networks:
+  msr:
+    driver: overlay
+
+services:
+  mediator:
+    image: msr-mediator:1
+    ports:
+      - "9000:9000"
+    networks:
+      - msr
+    deploy:
+      replicas: 1
+
+  associate:
+    image: msr-associate:1
+    networks:
+      - msr
+    deploy:
+      replicas: 1
+
+  descriptor:
+    image: msr-descriptor:1
+    networks:
+      - msr
+    deploy:
+      replicas: 1
+
+  properties:
+    image: msr-properties:1
+    networks:
+      - msr
+    deploy:
+      replicas: 1
+
+  reason:
+    image: msr-reason:1
+    networks:
+      - msr
+    deploy:
+      replicas: 1
+
+  relation:
+    image: msr-relation:1
+    networks:
+      - msr
+    deploy:
+      replicas: 1
+
+  stats:
+    image: msr-graphite-statsd
+    ports:
+      - "80:80"
+      - "81:81"
+      - "2003-2004:2003-2004"
+      - "2023-2024:2023-2024" 
+      - "8125:8125"
+      - "8126:8126"
+    networks:
+      - msr
+    deploy:
+      replicas: 1
+
+  web:
+    image: msr-web:1
+    ports:
+      - "8000:8000"
+    networks:
+      - msr
+    deploy:
+      replicas: 1
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+       - "9411:9411"
+    networks:
+      - msr
+    deploy:
+      replicas: 1

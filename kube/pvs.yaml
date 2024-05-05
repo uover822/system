@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: msr-volume
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 3Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: msr-sc
+  hostPath:
+    path: /opt/data

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reason
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reason
+  template:
+    metadata:
+      labels:
+        app: reason
+    spec:
+      containers:
+        - name: reason
+          image: uover822/msr-reason:1
+          ports:
+            - containerPort: 8035
+          env:
+            - name: cluster
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: cluster
+            - name: app
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: app
+            - name: user
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: user

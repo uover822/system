@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: relation
+spec:
+  selector:
+    app: relation
+  ports:
+    - port: 8040
+  type: LoadBalancer
+  sessionAffinity: ClientIP

@@ -1,0 +1,43 @@
+fuge_global:
+  tail: true
+  monitor: false
+  environment:
+    - cluster=fuge
+    - app=test
+    - user=john
+context:
+  type: process
+  path: ../../context
+  run: java --add-opens java.base/java.lang=ALL-UNNAMED -cp .:sse:binaries/* Reason
+associate:
+  type: node
+  path: ../../associate/srv
+  run: node associate-dev.js --seneca.options.legacy.transport=false
+descriptor:
+  type: node
+  path: ../../descriptor/srv
+  run: node descriptor-dev.js --seneca.options.legacy.transport=false
+mediator:
+  type: node
+  path: ../../mediator/srv
+  run: node mediator-dev.js --seneca.options.legacy.transport=false
+properties:
+  type: node
+  path: ../../properties/srv
+  run: node properties-dev.js --seneca.options.legacy.transport=false
+reason:
+  type: node
+  path: ../../reason/srv
+  run: node reason-dev.js --seneca.options.legacy.transport=false
+relation:
+  type: node
+  path: ../../relation/srv
+  run: node relation-dev.js --seneca.options.legacy.transport=false
+store:
+  type: node
+  path: ../../store/srv
+  run: node store-dev.js --seneca.options.legacy.transport=false
+web:
+  type: node
+  path: ../../web/srv
+  run: node web-dev.js --seneca.options.legacy.transport=false

@@ -1,0 +1,30 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: MSR-Demo-Cluster
+  region: us-west-2
+  version: "1.25"
+
+vpc:
+  id: vpc-04e62a34e113d0469
+  cidr: "192.168.0.0/16"
+  subnets:
+    public:
+      us-west-2a:
+        id: subnet-0526959b43e87a75b
+      us-west-2b:
+        id: subnet-0e762f6f6a1533aa0
+    private:
+      us-west-2a:
+        id: subnet-0c8a79bd4248fc03f
+      us-west-2b:
+        id: subnet-05b4ba52937f00d28
+
+nodeGroups:
+  - name: MSR-public-workers
+    instanceType: t2.medium
+    desiredCapacity: 4
+  - name: MSR-private-workers
+    instanceType: t2.medium
+    desiredCapacity: 0
+    privateNetworking: true

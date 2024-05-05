@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: store
+  template:
+    metadata:
+      labels:
+        app: store
+    spec:
+      containers:
+        - name: store
+          image: uover822/msr-store:1
+          ports:
+            - containerPort: 8045
+          env:
+            - name: cluster
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: cluster
+            - name: app
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: app
+            - name: user
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: user
+          volumeMounts:
+            - mountPath: /opt/data
+              name: msr-volume
+      volumes:
+        - name: msr-volume
+          persistentVolumeClaim:
+            claimName: msr-claim
