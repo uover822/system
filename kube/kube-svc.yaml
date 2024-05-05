@@ -1,1 +1,11 @@
-svc-msrassociate.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: associate
+spec:
+  selector:
+    app: associate
+  ports:
+    - port: 8005
+  type: LoadBalancer
+  sessionAffinity: ClientIP
