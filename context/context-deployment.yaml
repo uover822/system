@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: context
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: context
+  template:
+    metadata:
+      labels:
+        app: context
+    spec:
+      containers:
+        - name: context
+          image: uover822/msr-context:1
+          ports:
+            - containerPort: 4567
+              name: context
+            - containerPort: 7080
+              name: metrics
+          env:
+            - name: cluster
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: cluster
+            - name: app
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: app
+            - name: user
+              valueFrom:
+                configMapKeyRef:
+                  name: msrconfigmap
+                  key: user
