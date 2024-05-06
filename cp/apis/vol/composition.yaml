@@ -1,0 +1,117 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: msr-vol
+  labels:
+    type: vol
+spec:
+  compositeTypeRef:
+    apiVersion: msr.com/v1alpha1
+    kind: Vol
+  patchSets:
+  - name: metadata
+    patches:
+    - fromFieldPath: metadata.labels
+  resources:
+  - name: storage
+    base:
+      apiVersion: kubernetes.crossplane.io/v1alpha1
+      kind: Object
+      spec:
+        forProvider:
+          manifest:
+            apiVersion: storage.k8s.io/v1
+            kind: StorageClass
+            metadata:
+              name: msr-sc
+              namespace: default
+            provisioner: kubernetes.io/no-provisioner
+            volumeBindingMode: WaitForFirstConsumer
+        providerConfigRef:
+          name: kubernetes-provider
+    patches:
+    - fromFieldPath: spec.parameters.storageClass
+      toFieldPath: spec.forProvider.manifest.metadata.name
+    readinessChecks:
+      - type: None
+  - name: volume
+    base:
+      apiVersion: kubernetes.crossplane.io/v1alpha1
+      kind: Object
+      spec:
+        forProvider:
+          manifest:
+            apiVersion: v1
+            kind: PersistentVolume
+            metadata:
+              name: msr-volume
+              namespace: default
+              labels:
+                type: local
+            spec:
+              capacity:
+                storage: 3Gi
+              accessModes:
+                - ReadWriteMany
+              persistentVolumeReclaimPolicy: Retain
+              storageClassName: msr-sc
+              hostPath:
+                path: /opt/data
+        providerConfigRef:
+          name: kubernetes-provider
+    patches:
+    - fromFieldPath: spec.id
+      toFieldPath: metadata.name
+      transforms:
+        - type: string
+          string:
+            fmt: "%s-volume"
+    - fromFieldPath: spec.parameters.volume
+      toFieldPath: spec.forProvider.manifest.metadata.name
+    - fromFieldPath: spec.parameters.capacity
+      toFieldPath: spec.forProvider.manifest.spec.capacity.storage
+    - fromFieldPath: spec.parameters.storageClass
+      toFieldPath: spec.forProvider.manifest.spec.storageClassName
+    - fromFieldPath: spec.parameters.hostPath
+      toFieldPath: spec.forProvider.manifest.spec.hostPath.path
+    readinessChecks:
+      - type: None
+  - name: claim
+    base:
+      apiVersion: kubernetes.crossplane.io/v1alpha1
+      kind: Object
+      spec:
+        forProvider:
+          manifest:
+            apiVersion: v1
+            kind: PersistentVolumeClaim
+            metadata:
+              name: msr-claim
+              namespace: default
+            spec:
+              volumeName: msr-volume
+              accessModes:
+              - ReadWriteMany
+              storageClassName: msr-sc
+              resources:
+                requests:
+                  storage: 3Gi
+        providerConfigRef:
+          name: kubernetes-provider
+    patches:
+    - fromFieldPath: spec.id
+      toFieldPath: metadata.name
+      transforms:
+        - type: string
+          string:
+            fmt: "%s-claim"
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.metadata.name
+    - fromFieldPath: spec.parameters.volume
+      toFieldPath: spec.forProvider.manifest.spec.volumeName
+    - fromFieldPath: spec.parameters.storageClass
+      toFieldPath: spec.forProvider.manifest.spec.storageClassName
+    - fromFieldPath: spec.parameters.capacity
+      toFieldPath: spec.forProvider.manifest.spec.resources.requests.storage
+    readinessChecks:
+      - type: None

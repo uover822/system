@@ -1,0 +1,12 @@
+apiVersion: kubernetes.crossplane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: kubernetes-provider-secret
+spec:
+  credentials:
+#    source: InjectedIdentity
+    source: Secret
+    secretRef:
+      namespace: default
+      name: regcred
+      key: auths

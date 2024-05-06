@@ -1,0 +1,204 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: store
+  labels:
+    type: strapp
+spec:
+  compositeTypeRef:
+    apiVersion: msr.com/v1alpha1
+    kind: StrApp
+  patchSets:
+  - name: metadata
+    patches:
+    - fromFieldPath: metadata.labels
+  resources:
+  - name: kubernetes
+    base:
+      apiVersion: kubernetes.crossplane.io/v1alpha1
+      kind: ProviderConfig
+      spec:
+        credentials:
+          source: InjectedIdentity
+    patches:
+    - fromFieldPath: spec.id
+      toFieldPath: metadata.name
+    readinessChecks:
+      - type: None
+  - name: store
+    base:
+      apiVersion: kubernetes.crossplane.io/v1alpha1
+      kind: Object
+      spec:
+        forProvider:
+          manifest:
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: 
+            spec:
+              replicas: 1
+              selector:
+                matchLabels:
+                  app: 
+              template:
+                metadata:
+                  labels:
+                    app: 
+                spec:
+                  containers:
+                    - name:
+#                      image: uover822/msr-web:1
+                      ports:
+                        - containerPort:
+#                      livenessProbe:
+#                        enabled: true
+#                      readinessProbe:
+#                        enabled: true
+#                      livenessProbe:
+#                        httpGet:
+#                          path: /healthy
+#                          port:
+#                      readinessProbe:
+#                        httpGet:
+#                          path: /healthy
+#                          port:
+#                      resources:
+#                        limits:
+#                          cpu: 250m
+#                          memory: 256Mi
+#                        requests:
+#                          cpu: 125m
+#                          memory: 128Mi
+                      env:
+                        - name: cluster
+                          valueFrom:
+                            configMapKeyRef:
+                              name: msrconfigmap
+                              key: cluster
+                        - name: app
+                          valueFrom:
+                            configMapKeyRef:
+                              name: msrconfigmap
+                              key: app
+                        - name: user
+                          valueFrom:
+                            configMapKeyRef:
+                              name: msrconfigmap
+                              key: user
+                      volumeMounts:
+                          - mountPath: /opt/data
+                            name: msr-volume
+                  volumes:
+                    - name: msr-volume
+                      persistentVolumeClaim:
+                        claimName: msr-claim
+                  imagePullPolicy: IfNotPresent
+                  imagePullSecrets:
+                  - name: regcred
+    patches:
+    - fromFieldPath: spec.id
+      toFieldPath: metadata.name
+      transforms:
+        - type: string
+          string:
+            fmt: "%s-deployment"
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.metadata.name
+    - fromFieldPath: spec.parameters.namespace
+      toFieldPath: spec.forProvider.manifest.metadata.namespace
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.metadata.labels.app
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.spec.selector.matchLabels.app
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.spec.template.metadata.labels.app
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.spec.template.spec.containers[0].name
+    - fromFieldPath: spec.parameters.image
+      toFieldPath: spec.forProvider.manifest.spec.template.spec.containers[0].image
+    - fromFieldPath: spec.parameters.port
+      toFieldPath: spec.forProvider.manifest.spec.template.spec.containers[0].ports[0].containerPort
+#    - fromFieldPath: spec.parameters.port
+#      toFieldPath: spec.forProvider.manifest.spec.template.spec.containers[0].livenessProbe.httpGet.port
+#    - fromFieldPath: spec.parameters.port
+#      toFieldPath: spec.forProvider.manifest.spec.template.spec.containers[0].readinessProbe.httpGet.port
+    - fromFieldPath: spec.id
+      toFieldPath: spec.providerConfigRef.name
+    readinessChecks:
+      - type: None
+  - name: service
+    base:
+      apiVersion: kubernetes.crossplane.io/v1alpha1
+      kind: Object
+      spec:
+        forProvider:
+          manifest:
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name:
+            spec:
+              selector:
+                app:
+              ports:
+                - port:
+                  targetPort:
+              type: LoadBalancer
+              sessionAffinity: ClientIP
+    patches:
+    - fromFieldPath: spec.id
+      toFieldPath: metadata.name
+      transforms:
+        - type: string
+          string:
+            fmt: "%s-service"
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.metadata.name
+    - fromFieldPath: spec.parameters.namespace
+      toFieldPath: spec.forProvider.manifest.metadata.namespace
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.metadata.labels.app
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.spec.selector.app
+    - fromFieldPath: spec.parameters.port
+      toFieldPath: spec.forProvider.manifest.spec.ports[0].port
+    - fromFieldPath: spec.parameters.port
+      toFieldPath: spec.forProvider.manifest.spec.ports[0].targetPort
+    - fromFieldPath: spec.id
+      toFieldPath: spec.providerConfigRef.name
+    readinessChecks:
+      - type: None
+  - name: hpa
+    base:
+      apiVersion: kubernetes.crossplane.io/v1alpha1
+      kind: Object
+      spec:
+        forProvider:
+          manifest:
+            apiVersion: autoscaling/v1
+            kind: HorizontalPodAutoscaler
+            spec:
+              minReplicas: 1
+              maxReplicas: 1
+              scaleTargetRef:
+                apiVersion: apps/v1
+                kind: Deployment
+              targetCPUUtilizationPercentage: 8000
+    patches:
+    - fromFieldPath: spec.id
+      toFieldPath: metadata.name
+      transforms:
+        - type: string
+          string:
+            fmt: "%s-ingress"
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.metadata.name
+    - fromFieldPath: spec.parameters.namespace
+      toFieldPath: spec.forProvider.manifest.metadata.namespace
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.metadata.labels.sbc
+    - fromFieldPath: spec.id
+      toFieldPath: spec.forProvider.manifest.spec.scaleTargetRef.name
+    readinessChecks:
+      - type: None
