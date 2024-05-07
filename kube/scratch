@@ -212,4 +212,4 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443 &
 
 argocd admin initial-password -n argocd
 
-git remote set-url origin git@192.168.1.4:3000
+git remote set-url origin git@github.com:uover822/system.git
