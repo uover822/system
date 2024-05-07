@@ -1,0 +1,72 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: v1
+data:
+  application.resourceTrackingMethod: annotation
+  resource.customizations: "\"*.upbound.io/*\":\n  health.lua: |\n    health_status
+    = {\n      status = \"Progressing\",\n      message = \"Provisioning ...\"\n    }\n\n
+    \   local function contains (table, val)\n      for i, v in ipairs(table) do\n
+    \       if v == val then\n          return true\n        end\n      end\n      return
+    false\n    end\n\n    local has_no_status = {\n      \"ProviderConfig\",\n      \"ProviderConfigUsage\"\n
+    \   }\n\n    if obj.status == nil or next(obj.status) == nil and contains(has_no_status,
+    obj.kind) then\n      health_status.status = \"Healthy\"\n      health_status.message
+    = \"Resource is up-to-date.\"\n      return health_status\n    end\n\n    if obj.status
+    == nil or next(obj.status) == nil or obj.status.conditions == nil then\n      if
+    obj.kind == \"ProviderConfig\" and obj.status.users ~= nil then\n        health_status.status
+    = \"Healthy\"\n        health_status.message = \"Resource is in use.\"\n        return
+    health_status\n      end\n      return health_status\n    end\n\n    for i, condition
+    in ipairs(obj.status.conditions) do\n      if condition.type == \"LastAsyncOperation\"
+    then\n        if condition.status == \"False\" then\n          health_status.status
+    = \"Degraded\"\n          health_status.message = condition.message\n          return
+    health_status\n        end\n      end\n\n      if condition.type == \"Synced\"
+    then\n        if condition.status == \"False\" then\n          health_status.status
+    = \"Degraded\"\n          health_status.message = condition.message\n          return
+    health_status\n        end\n      end\n\n      if condition.type == \"Ready\"
+    then\n        if condition.status == \"True\" then\n          health_status.status
+    = \"Healthy\"\n          health_status.message = \"Resource is up-to-date.\"\n
+    \         return health_status\n        end\n      end\n    end\n\n    return
+    health_status\n\n\"*.crossplane.io/*\":\n\n  health.lua: |\n    health_status
+    = {\n      status = \"Progressing\",\n      message = \"Provisioning ...\"\n    }\n\n
+    \   local function contains (table, val)\n      for i, v in ipairs(table) do\n
+    \       if v == val then\n          return true\n        end\n      end\n\n      return
+    false\n    end\n\n    local has_no_status = {\n      \"Composition\",\n      \"CompositionRevision\",\n
+    \     \"DeploymentRuntimeConfig\",\n      \"ControllerConfig\",\n      \"ProviderConfig\",\n
+    \     \"ProviderConfigUsage\"\n    }\n\n    if obj.status == nil or next(obj.status)
+    == nil and contains(has_no_status, obj.kind) then\n        health_status.status
+    = \"Healthy\"\n        health_status.message = \"Resource is up-to-date.\"\n      return
+    health_status\n    end\n\n    if obj.status == nil or next(obj.status) == nil
+    or obj.status.conditions == nil then\n      if obj.kind == \"ProviderConfig\"
+    and obj.status.users ~= nil then\n        health_status.status = \"Healthy\"\n
+    \       health_status.message = \"Resource is in use.\"\n        return health_status\n
+    \     end\n      return health_status\n    end\n\n    for i, condition in ipairs(obj.status.conditions)
+    do\n      if condition.type == \"LastAsyncOperation\" then\n        if condition.status
+    == \"False\" then\n          health_status.status = \"Degraded\"\n          health_status.message
+    = condition.message\n          return health_status\n        end\n      end\n\n
+    \     if condition.type == \"Synced\" then\n        if condition.status == \"False\"
+    then\n          health_status.status = \"Degraded\"\n          health_status.message
+    = condition.message\n          return health_status\n        end\n      end\n\n
+    \     if contains({\"Ready\", \"Healthy\", \"Offered\", \"Established\"}, condition.type)
+    then\n        if condition.status == \"True\" then\n          health_status.status
+    = \"Healthy\"\n          health_status.message = \"Resource is up-to-date.\"\n
+    \         return health_status\n        end\n      end\n    end\n\n    return
+    health_status    \n"
+  resource.exclusions: |
+    - apiGroups:
+      - "*"
+      kinds:
+      - ProviderConfigUsage
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"argocd-cm","app.kubernetes.io/part-of":"argocd"},"name":"argocd-cm","namespace":"argocd"}}
+  creationTimestamp: "2024-05-05T21:31:32Z"
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-cm
+  namespace: argocd
+  resourceVersion: "13357"
+  uid: 41d4bcef-49fb-4899-b4e7-d89bb6fa51f9
